@@ -9,7 +9,7 @@ import { Constants } from "./constants";
 import * as path from "path";
 import nodePath = require('path');
 import * as fs from 'fs';
-
+import { shouldTranspile, transpile } from './transpile';
 
 
 let sass = require('sass');
@@ -1383,6 +1383,11 @@ async function bgScriptExecute(showWarning = true) {
 	scriptObj.executeScript = true;
 
 	scriptObj.action = 'executeBackgroundScript';
+
+	if (shouldTranspile(scriptObj.content)) {
+		scriptObj.content = transpile(scriptObj.content);
+	}
+
     writeBGScriptStartToWebViewPanel(scriptObj);
 
 	wss.clients.forEach(function each(client) {
